@@ -1,0 +1,7 @@
+---
+
+application_username: container
+
+nerdctl_version: 0.16.1
+download_url: "https://github.com/containerd/nerdctl/releases/download/v{{ nerdctl_version }}/nerdctl-full-{{ nerdctl_version }}-linux-amd64.tar.gz"
+download_sha256_checksum: 25b6c9a7059e568238f07baacc1ece6af3d698ae8d33cb9f0ec1e5161230ab62

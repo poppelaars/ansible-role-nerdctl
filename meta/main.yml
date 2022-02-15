@@ -1,0 +1,34 @@
+---
+galaxy_info:
+  namespace: poppelaars
+  role_name: nerdctl
+  author: poppelaars
+  description: Installs nerdctl (full distribution).
+  company: N/A
+
+  license: license (MIT)
+
+  min_ansible_version: 2.1
+
+  platforms:
+    - name: EL
+      versions:
+        - 8
+    - name: Debian
+      versions:
+        - buster
+        - bullseye
+    - name: Ubuntu
+      versions:
+        - focal
+
+  galaxy_tags:
+    - container
+    - containerd
+    - infrastructure
+    - nerdctl
+    - nonroot
+    - server
+    - system
+
+dependencies: []

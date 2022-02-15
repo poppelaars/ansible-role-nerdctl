@@ -1,0 +1,16 @@
+---
+
+- name: Converge prepare infrastructure
+  hosts: all
+  become: true
+
+  roles:
+    - role: poppelaars.nerdctl_infrastructure
+
+- name: Converge
+  hosts: all
+  become: true
+  become_user: container
+
+  roles:
+    - role: poppelaars.nerdctl

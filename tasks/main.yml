@@ -1,0 +1,47 @@
+---
+
+- name: "Download 'nerdctl-full-{{ nerdctl_version }}-linux-amd64.tar.gz' with check (sha256)."
+  ansible.builtin.get_url:
+    url: "{{ download_url }}"
+    dest: "/home/{{ application_username }}/nerdctl.tar.gz"
+    checksum: "sha256:{{ download_sha256_checksum }}"
+
+- name: "Create /home/{{ application_username }}/.local directory."
+  ansible.builtin.file:
+    path: "/home/{{ application_username }}/.local"
+    state: directory
+
+- name: Unarchive a file that is already on the remote machine.
+  ansible.builtin.unarchive:
+    src: "/home/{{ application_username }}/nerdctl.tar.gz"
+    dest: "/home/{{ application_username }}/.local"
+    creates: "/home/{{ application_username }}/.local/bin/containerd-rootless-setuptool.sh"
+    remote_src: true
+
+- name: Register user id.
+  ansible.builtin.getent:
+    database: passwd
+    key: "{{ application_username }}"
+
+- name: Configure dbus service.
+  ansible.builtin.systemd:
+    name: dbus
+    enabled: true
+    state: started
+    scope: user
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ ansible_facts.getent_passwd.container.1 }}"
+
+- name: Install containerd rootless.
+  ansible.builtin.shell:
+    cmd: "/home/{{ application_username }}/.local/bin/containerd-rootless-setuptool.sh install"
+    creates: "/home/{{ application_username }}/.config/systemd/user/containerd.service"
+  environment:
+    PATH: "/home/{{ application_username }}/.local/bin:/home/{{ application_username }}/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin"
+    XDG_RUNTIME_DIR: "/run/user/{{ ansible_facts.getent_passwd.container.1 }}"
+
+- name: Configure environmental variables.
+  ansible.builtin.lineinfile:
+    path: "/home/{{ application_username }}/.bash_profile"
+    line: export XDG_RUNTIME_DIR="/run/user/$(id -u)";
+    create: true
