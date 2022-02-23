@@ -5,7 +5,7 @@
   become: true
 
   roles:
-    - role: poppelaars.nerdctl_infrastructure
+    - role: poppelaars.container_infrastructure
 
 - name: Converge
   hosts: all
