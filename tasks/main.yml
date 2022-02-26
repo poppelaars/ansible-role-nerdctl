@@ -18,6 +18,18 @@
     creates: "/home/{{ application_username }}/.local/bin/containerd-rootless-setuptool.sh"
     remote_src: true
 
+- name: "Create /home/{{ application_username }}/.config/nerdctl directory."
+  ansible.builtin.file:
+    path: "/home/{{ application_username }}/.config/nerdctl"
+    state: directory
+
+- name: Create nerdctl config.
+  ansible.builtin.template:
+    src: nerdctl.toml.j2
+    dest: "/home/{{ application_username }}/.config/nerdctl/nerdctl.toml"
+  notify:
+    - Restart containerd service
+
 - name: Register user id.
   ansible.builtin.getent:
     database: passwd

@@ -25,6 +25,18 @@ def test_install_nerdctl(host):
         assert dot_local.exists
         assert dot_local.is_directory
 
+        dot_config = host.file("/home/container/.config")
+        assert dot_config.exists
+        assert dot_config.is_directory
+
+        dot_config_nerdctl = host.file("/home/container/.config/nerdctl")
+        assert dot_config_nerdctl.exists
+        assert dot_config_nerdctl.is_directory
+
+        nerdctl_toml = host.file("/home/container/.config/nerdctl/nerdctl.toml")
+        assert nerdctl_toml.exists
+        assert nerdctl_toml.is_file
+
         tar_gz_is_unpacked = host.file("/home/container/.local/bin/containerd-rootless-setuptool.sh")
         assert tar_gz_is_unpacked.exists
         assert tar_gz_is_unpacked.is_file
